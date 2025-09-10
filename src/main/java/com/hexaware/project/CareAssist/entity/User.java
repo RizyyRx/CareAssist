@@ -2,15 +2,20 @@ package com.hexaware.project.CareAssist.entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -40,11 +45,7 @@ public class User {
 	private String email;
 	
 	@NotBlank(message = "Password is required")
-	@Size(min = 3, max = 10, message = "Password must be between 3 to 15 characters")
 	private String password;
-	
-	@NotBlank(message = "Role is required")
-	private String role;
 	
 	@CreationTimestamp
 	@Column(updatable = false)
@@ -58,6 +59,13 @@ public class User {
 	@OneToMany(mappedBy = "insuranceCompany", cascade = CascadeType.ALL)
 	private List<InsurancePlan> insurancePlan;
 	
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinTable(
+			name = "users_roles",
+			joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "userId"),
+			inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+	 
+	private Set<Role> roles;
 	
 	public int getUserId() {
 		return userId;
@@ -107,14 +115,6 @@ public class User {
 		this.password = password;
 	}
 
-	public String getRole() {
-		return role;
-	}
-
-	public void setRole(String role) {
-		this.role = role;
-	}
-
 	public LocalDateTime getCreatedAt() {
 		return createdAt;
 	}
@@ -139,6 +139,14 @@ public class User {
 		this.insurancePlan = insurancePlan;
 	}
 
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+
 	public User() {
 		super();
 	}
@@ -148,8 +156,8 @@ public class User {
 			@NotBlank(message = "Username is required") String username,
 			@NotBlank(message = "Email is required") String email,
 			@NotBlank(message = "Password is required") @Size(min = 3, max = 10, message = "Password must be between 3 to 15 characters") String password,
-			@NotBlank(message = "Role is required") String role, LocalDateTime createdAt, Patient patient,
-			List<InsurancePlan> insurancePlan) {
+			LocalDateTime createdAt, Patient patient, List<InsurancePlan> insurancePlan,
+			Set<com.hexaware.project.CareAssist.entity.Role> roles) {
 		super();
 		this.userId = userId;
 		this.firstName = firstName;
@@ -157,19 +165,18 @@ public class User {
 		this.username = username;
 		this.email = email;
 		this.password = password;
-		this.role = role;
 		this.createdAt = createdAt;
 		this.patient = patient;
 		this.insurancePlan = insurancePlan;
+		this.roles = roles;
 	}
 
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", username="
-				+ username + ", email=" + email + ", password=" + password + ", role=" + role + ", createdAt="
-				+ createdAt + ", patient=" + patient + ", insurancePlan=" + insurancePlan + "]";
+				+ username + ", email=" + email + ", password=" + password + ", createdAt=" + createdAt + ", patient="
+				+ patient + ", insurancePlan=" + insurancePlan + ", roles=" + roles + "]";
 	}
-
 
 
 }
