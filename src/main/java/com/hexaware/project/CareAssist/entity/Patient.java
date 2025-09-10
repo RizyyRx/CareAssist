@@ -23,32 +23,24 @@ public class Patient {
     @NotNull(message = "User is required")
     private User user;
     
-	@NotBlank(message = "First Name is required")
+
 	private String firstName;
-	
-	@NotBlank(message = "Last Name is required")
 	private String lastName;
 
-    @NotNull(message = "Date of birth is required")
     @Past(message = "Date of birth must be in the past")
-    @Column(nullable = false)
     private LocalDate dob;
 
-    @NotBlank(message = "Gender is required")
-    @Column(nullable = false, length = 10)
     private String gender;
 
-    @NotBlank(message = "Contact number is required")
     @Size(min = 10, max = 15, message = "Contact number must be between 10–15 digits")
     @Pattern(regexp = "^[0-9]+$", message = "Contact number must contain only digits")
-    @Column(nullable = false, length = 15, unique = true)
+    @Column(length = 15, unique = true)
     private String contactNumber;
 
-    @NotBlank(message = "Address is required")
-    @Column(nullable = false, length = 255)
+    @Column(length = 255)
     private String address;
 
-    @Column(columnDefinition = "TEXT") // optional field
+    @Column(columnDefinition = "TEXT")
     private String medicalHistory;
 
     // One patient will have many patientInsurance records
@@ -151,14 +143,10 @@ public class Patient {
 		super();
 	}
 
-	public Patient(int patientId, @NotNull(message = "User is required") User user,
-			@NotBlank(message = "First Name is required") String firstName,
-			@NotBlank(message = "Last Name is required") String lastName,
-			@NotNull(message = "Date of birth is required") @Past(message = "Date of birth must be in the past") LocalDate dob,
-			@NotBlank(message = "Gender is required") String gender,
-			@NotBlank(message = "Contact number is required") @Size(min = 10, max = 15, message = "Contact number must be between 10–15 digits") @Pattern(regexp = "^[0-9]+$", message = "Contact number must contain only digits") String contactNumber,
-			@NotBlank(message = "Address is required") String address, String medicalHistory,
-			List<PatientInsurance> patientInsurance, List<Invoice> invoice) {
+	public Patient(int patientId, @NotNull(message = "User is required") User user, String firstName, String lastName,
+			@Past(message = "Date of birth must be in the past") LocalDate dob, String gender,
+			@Size(min = 10, max = 15, message = "Contact number must be between 10–15 digits") @Pattern(regexp = "^[0-9]+$", message = "Contact number must contain only digits") String contactNumber,
+			String address, String medicalHistory, List<PatientInsurance> patientInsurance, List<Invoice> invoice) {
 		super();
 		this.patientId = patientId;
 		this.user = user;
@@ -182,6 +170,5 @@ public class Patient {
 	}
 
 
-    
 
 }
