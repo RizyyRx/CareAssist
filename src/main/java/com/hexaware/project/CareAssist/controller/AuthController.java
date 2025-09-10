@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hexaware.project.CareAssist.dto.JwtAuthResponse;
 import com.hexaware.project.CareAssist.dto.LoginDTO;
+import com.hexaware.project.CareAssist.dto.RegisterDTO;
 import com.hexaware.project.CareAssist.service.AuthService;
 
 
@@ -23,7 +24,6 @@ public class AuthController {
 		this.authService = authService;
 	}
 
-	// Build Login REST API
     @PostMapping("/login")
     public ResponseEntity<JwtAuthResponse> login(@RequestBody LoginDTO loginDto){
         String token = authService.login(loginDto);
@@ -33,4 +33,12 @@ public class AuthController {
  
         return new ResponseEntity<>(jwtAuthResponse, HttpStatus.OK);
     }
+    
+    @PostMapping("/register")
+    public ResponseEntity<String> register(@RequestBody RegisterDTO registerDTO){
+    	String message = authService.register(registerDTO);
+    	return new ResponseEntity<>(message, HttpStatus.CREATED);
+    }
+    
+    
 }

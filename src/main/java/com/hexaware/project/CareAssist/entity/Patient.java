@@ -22,6 +22,12 @@ public class Patient {
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     @NotNull(message = "User is required")
     private User user;
+    
+	@NotBlank(message = "First Name is required")
+	private String firstName;
+	
+	@NotBlank(message = "Last Name is required")
+	private String lastName;
 
     @NotNull(message = "Date of birth is required")
     @Past(message = "Date of birth must be in the past")
@@ -52,9 +58,8 @@ public class Patient {
     // One patient will have many invoices
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)
     private List<Invoice> invoice;
-    
-
-    public int getPatientId() {
+	
+	public int getPatientId() {
 		return patientId;
 	}
 
@@ -68,6 +73,22 @@ public class Patient {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
 	public LocalDate getDob() {
@@ -131,6 +152,8 @@ public class Patient {
 	}
 
 	public Patient(int patientId, @NotNull(message = "User is required") User user,
+			@NotBlank(message = "First Name is required") String firstName,
+			@NotBlank(message = "Last Name is required") String lastName,
 			@NotNull(message = "Date of birth is required") @Past(message = "Date of birth must be in the past") LocalDate dob,
 			@NotBlank(message = "Gender is required") String gender,
 			@NotBlank(message = "Contact number is required") @Size(min = 10, max = 15, message = "Contact number must be between 10–15 digits") @Pattern(regexp = "^[0-9]+$", message = "Contact number must contain only digits") String contactNumber,
@@ -139,6 +162,8 @@ public class Patient {
 		super();
 		this.patientId = patientId;
 		this.user = user;
+		this.firstName = firstName;
+		this.lastName = lastName;
 		this.dob = dob;
 		this.gender = gender;
 		this.contactNumber = contactNumber;
@@ -150,10 +175,13 @@ public class Patient {
 
 	@Override
 	public String toString() {
-		return "Patient [patientId=" + patientId + ", user=" + user + ", dob=" + dob + ", gender=" + gender
-				+ ", contactNumber=" + contactNumber + ", address=" + address + ", medicalHistory=" + medicalHistory
-				+ ", patientInsurance=" + patientInsurance + ", invoice=" + invoice + "]";
+		return "Patient [patientId=" + patientId + ", user=" + user + ", firstName=" + firstName + ", lastName="
+				+ lastName + ", dob=" + dob + ", gender=" + gender + ", contactNumber=" + contactNumber + ", address="
+				+ address + ", medicalHistory=" + medicalHistory + ", patientInsurance=" + patientInsurance
+				+ ", invoice=" + invoice + "]";
 	}
 
+
+    
 
 }

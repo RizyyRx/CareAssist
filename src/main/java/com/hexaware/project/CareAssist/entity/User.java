@@ -30,12 +30,6 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int userId;
 	
-	@NotBlank(message = "First Name is required")
-	private String firstName;
-	
-	@NotBlank(message = "Last Name is required")
-	private String lastName;
-	
 	@NotBlank(message = "Username is required")
 	@Column(unique = true)
 	private String username;
@@ -73,22 +67,6 @@ public class User {
 
 	public void setUserId(int userId) {
 		this.userId = userId;
-	}
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
 	}
 
 	public String getUsername() {
@@ -151,17 +129,12 @@ public class User {
 		super();
 	}
 
-	public User(int userId, @NotBlank(message = "First Name is required") String firstName,
-			@NotBlank(message = "Last Name is required") String lastName,
-			@NotBlank(message = "Username is required") String username,
+	public User(int userId, @NotBlank(message = "Username is required") String username,
 			@NotBlank(message = "Email is required") String email,
-			@NotBlank(message = "Password is required") @Size(min = 3, max = 10, message = "Password must be between 3 to 15 characters") String password,
-			LocalDateTime createdAt, Patient patient, List<InsurancePlan> insurancePlan,
-			Set<com.hexaware.project.CareAssist.entity.Role> roles) {
+			@NotBlank(message = "Password is required") String password, LocalDateTime createdAt, Patient patient,
+			List<InsurancePlan> insurancePlan, Set<Role> roles) {
 		super();
 		this.userId = userId;
-		this.firstName = firstName;
-		this.lastName = lastName;
 		this.username = username;
 		this.email = email;
 		this.password = password;
@@ -173,10 +146,11 @@ public class User {
 
 	@Override
 	public String toString() {
-		return "User [userId=" + userId + ", firstName=" + firstName + ", lastName=" + lastName + ", username="
-				+ username + ", email=" + email + ", password=" + password + ", createdAt=" + createdAt + ", patient="
-				+ patient + ", insurancePlan=" + insurancePlan + ", roles=" + roles + "]";
+		return "User [userId=" + userId + ", username=" + username + ", email=" + email + ", password=" + password
+				+ ", createdAt=" + createdAt + ", patient=" + patient + ", insurancePlan=" + insurancePlan + ", roles="
+				+ roles + "]";
 	}
+
 
 
 }
