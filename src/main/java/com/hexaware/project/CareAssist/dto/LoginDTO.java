@@ -17,17 +17,5 @@ public class LoginDTO {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public LoginDTO() {
-		super();
-	}
-	public LoginDTO(String usernameOrEmail, String password) {
-		super();
-		this.usernameOrEmail = usernameOrEmail;
-		this.password = password;
-	}
-	@Override
-	public String toString() {
-		return "LoginDTO [usernameOrEmail=" + usernameOrEmail + ", password=" + password + "]";
-	}
 
 }

@@ -31,22 +31,5 @@ public class RegisterDTO {
 	public void setRole(String role) {
 		this.role = role;
 	}
-	public RegisterDTO() {
-		super();
-	}
-	public RegisterDTO(String username, String email, String password, String role) {
-		super();
-		this.username = username;
-		this.email = email;
-		this.password = password;
-		this.role = role;
-	}
-	@Override
-	public String toString() {
-		return "RegisterDTO [username=" + username + ", email=" + email + ", password=" + password + ", role=" + role
-				+ "]";
-	}
-
-   
 	
 }

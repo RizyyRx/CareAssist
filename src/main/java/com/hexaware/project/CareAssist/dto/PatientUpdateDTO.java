@@ -54,25 +54,4 @@ public class PatientUpdateDTO {
 	public void setMedicalHistory(String medicalHistory) {
 		this.medicalHistory = medicalHistory;
 	}
-	public PatientUpdateDTO() {
-		super();
-	}
-	public PatientUpdateDTO(String firstName, String lastName, LocalDate dob, String gender, String contactNumber,
-			String address, String medicalHistory) {
-		super();
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.dob = dob;
-		this.gender = gender;
-		this.contactNumber = contactNumber;
-		this.address = address;
-		this.medicalHistory = medicalHistory;
-	}
-	@Override
-	public String toString() {
-		return "PatientDTO [firstName=" + firstName + ", lastName=" + lastName + ", dob=" + dob + ", gender=" + gender
-				+ ", contactNumber=" + contactNumber + ", address=" + address + ", medicalHistory=" + medicalHistory
-				+ "]";
-	}
-
 }

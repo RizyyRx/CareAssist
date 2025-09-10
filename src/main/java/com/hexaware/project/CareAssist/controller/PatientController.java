@@ -1,6 +1,7 @@
 package com.hexaware.project.CareAssist.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,6 +26,7 @@ public class PatientController {
 	private UserRepository userRepository;
 	private PatientService patientService;
 
+	@PreAuthorize("hasRole('PATIENT')")
 	@PutMapping("/profile")
 	public ResponseEntity<String> updateProfile(@RequestBody PatientUpdateDTO dto,Authentication authentication) {
 
