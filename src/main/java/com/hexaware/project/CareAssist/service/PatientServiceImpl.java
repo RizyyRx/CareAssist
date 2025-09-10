@@ -1,12 +1,13 @@
 package com.hexaware.project.CareAssist.service;
 
-import org.springframework.stereotype.Service;
 
+
+import org.springframework.stereotype.Service;
 import com.hexaware.project.CareAssist.dto.PatientUpdateDTO;
 import com.hexaware.project.CareAssist.entity.Patient;
 import com.hexaware.project.CareAssist.entity.User;
+import com.hexaware.project.CareAssist.repository.InsurancePlanRepository;
 import com.hexaware.project.CareAssist.repository.PatientRepository;
-import com.hexaware.project.CareAssist.repository.UserRepository;
 
 @Service
 public class PatientServiceImpl implements PatientService{
@@ -14,8 +15,11 @@ public class PatientServiceImpl implements PatientService{
 	public PatientServiceImpl(PatientRepository patientRepository) {
 		super();
 		this.patientRepository = patientRepository;
+
 	}
+
 	private PatientRepository patientRepository;
+
 
 	public String updatePatientProfile(User user, PatientUpdateDTO dto) {
 
@@ -35,4 +39,6 @@ public class PatientServiceImpl implements PatientService{
 
 	    return "Patient profile updated successfully for user: " + user.getUsername();
 	}
+	
+
 }

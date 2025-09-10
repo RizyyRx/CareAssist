@@ -1,7 +1,10 @@
 package com.hexaware.project.CareAssist.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,4 +44,11 @@ public class InsurancePlanController {
         String message =  insurancePlanService.createInsurancePlan(user, insurancePlanDTO);
         return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
+    
+    @GetMapping("/getall")
+    public ResponseEntity<List<InsurancePlanDTO>> getAllInsurancePlans() {
+        List<InsurancePlanDTO> plans = insurancePlanService.getAllInsurancePlans();
+        return ResponseEntity.ok(plans);
+    }
+
 }

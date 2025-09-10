@@ -47,7 +47,9 @@ public class SpringSecurityConfig {
                     authorize.requestMatchers("/api/auth/**").permitAll();
                     authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
                     authorize.requestMatchers("/api/insuranceplan/create").hasRole("INSURANCE_COMPANY");
-                    authorize.requestMatchers("/api/patient/profile").hasRole("PATIENT");
+                    authorize.requestMatchers("/api/patient/updateprofile").hasRole("PATIENT");
+                    authorize.requestMatchers("/api/insuranceplan/getall").authenticated();
+                    authorize.requestMatchers("/**").hasRole("ADMIN");
                     authorize.anyRequest().authenticated();
                 }).httpBasic(Customizer.withDefaults());
  

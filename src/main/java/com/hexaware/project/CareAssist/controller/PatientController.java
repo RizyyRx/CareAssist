@@ -27,7 +27,7 @@ public class PatientController {
 	private PatientService patientService;
 
 	@PreAuthorize("hasRole('PATIENT')")
-	@PutMapping("/profile")
+	@PutMapping("/updateprofile")
 	public ResponseEntity<String> updateProfile(@RequestBody PatientUpdateDTO dto,Authentication authentication) {
 
 	    String username = authentication.getName(); // Extract from JWT
@@ -37,4 +37,5 @@ public class PatientController {
 	    String response = patientService.updatePatientProfile(user, dto);
 	    return ResponseEntity.ok(response);
 	}
+	
 }
