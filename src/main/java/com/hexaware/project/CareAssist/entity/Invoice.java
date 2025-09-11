@@ -34,7 +34,7 @@ public class Invoice {
     private String invoiceNumber;
 
     @NotNull(message = "Invoice date is required")
-    @Column(nullable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDate invoiceDate;
 
     @NotNull(message = "Due date is required")
@@ -68,27 +68,32 @@ public class Invoice {
     @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal totalAmount;
 
-    @PrePersist // Runs before Hibernate inserts the entity into the database
-    @PreUpdate  // Runs before Hibernate updates the entity
+    @Column(nullable = false)
+    private String status = "PENDING";
+    
+    @PrePersist
+    public void prePersist() {
+        calculateTotals();      // calculate subtotal, tax, totalAmount
+        calculateDueDate();     // calculate dueDate based on invoiceDate
+    }
+
+    @PreUpdate
     public void calculateTotals() {
         this.subtotal = (consultationFee == null ? BigDecimal.ZERO : consultationFee)
-                .add(diagnosticTestsFee == null ? BigDecimal.ZERO : diagnosticTestsFee)
-                .add(diagnosticScanFee == null ? BigDecimal.ZERO : diagnosticScanFee)
-                .add(medicationFee == null ? BigDecimal.ZERO : medicationFee);
-
+                    .add(diagnosticTestsFee == null ? BigDecimal.ZERO : diagnosticTestsFee)
+                    .add(diagnosticScanFee == null ? BigDecimal.ZERO : diagnosticScanFee)
+                    .add(medicationFee == null ? BigDecimal.ZERO : medicationFee);
         this.tax = subtotal.multiply(new BigDecimal("0.08"));
         this.totalAmount = subtotal.add(tax);
     }
 
-    @NotBlank(message = "Status is required")
-    @Column(nullable = false)
-    private String status;
-
-    @CreationTimestamp
-    @Column(updatable = false, nullable = false)
-    private LocalDateTime createdAt;
-
-    public int getInvoiceId() {
+    private void calculateDueDate() {
+        if (invoiceDate != null) {
+            this.dueDate = invoiceDate.plusDays(7);
+        }
+    }
+	
+	public int getInvoiceId() {
 		return invoiceId;
 	}
 
@@ -200,14 +205,6 @@ public class Invoice {
 		this.status = status;
 	}
 
-	public LocalDateTime getCreatedAt() {
-		return createdAt;
-	}
-
-	public void setCreatedAt(LocalDateTime createdAt) {
-		this.createdAt = createdAt;
-	}
-
 	public Invoice() {
 		super();
 	}
@@ -221,8 +218,7 @@ public class Invoice {
 			@Positive(message = "Diagnostic tests fee must be positive") BigDecimal diagnosticTestsFee,
 			@Positive(message = "Diagnostic scan fee must be positive") BigDecimal diagnosticScanFee,
 			@Positive(message = "Medication fee must be positive") BigDecimal medicationFee, BigDecimal subtotal,
-			BigDecimal tax, BigDecimal totalAmount, @NotBlank(message = "Status is required") String status,
-			LocalDateTime createdAt) {
+			BigDecimal tax, BigDecimal totalAmount, @NotBlank(message = "Status is required") String status) {
 		super();
 		this.invoiceId = invoiceId;
 		this.patient = patient;
@@ -238,7 +234,6 @@ public class Invoice {
 		this.tax = tax;
 		this.totalAmount = totalAmount;
 		this.status = status;
-		this.createdAt = createdAt;
 	}
 
 	@Override
@@ -247,8 +242,7 @@ public class Invoice {
 				+ ", invoiceNumber=" + invoiceNumber + ", invoiceDate=" + invoiceDate + ", dueDate=" + dueDate
 				+ ", consultationFee=" + consultationFee + ", diagnosticTestsFee=" + diagnosticTestsFee
 				+ ", diagnosticScanFee=" + diagnosticScanFee + ", medicationFee=" + medicationFee + ", subtotal="
-				+ subtotal + ", tax=" + tax + ", totalAmount=" + totalAmount + ", status=" + status + ", createdAt="
-				+ createdAt + "]";
+				+ subtotal + ", tax=" + tax + ", totalAmount=" + totalAmount + ", status=" + status + "]";
 	}
 
 
