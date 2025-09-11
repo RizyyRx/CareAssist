@@ -12,6 +12,8 @@ import com.hexaware.project.CareAssist.dto.LoginDTO;
 import com.hexaware.project.CareAssist.dto.RegisterDTO;
 import com.hexaware.project.CareAssist.service.AuthService;
 
+import jakarta.validation.Valid;
+
 
 @RestController
 @RequestMapping("api/auth")
@@ -26,7 +28,7 @@ public class AuthController {
 
     // Login user
     @PostMapping("/login")
-    public ResponseEntity<JwtAuthResponse> login(@RequestBody LoginDTO loginDto){
+    public ResponseEntity<JwtAuthResponse> login(@Valid @RequestBody LoginDTO loginDto){
         String token = authService.login(loginDto);
  
         JwtAuthResponse jwtAuthResponse = new JwtAuthResponse();
@@ -37,7 +39,7 @@ public class AuthController {
     
     // Register user with role
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody RegisterDTO registerDTO){
+    public ResponseEntity<String> register(@Valid @RequestBody RegisterDTO registerDTO){
     	String message = authService.register(registerDTO);
     	return new ResponseEntity<>(message, HttpStatus.CREATED);
     }

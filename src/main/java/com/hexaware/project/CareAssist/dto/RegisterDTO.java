@@ -1,10 +1,21 @@
 package com.hexaware.project.CareAssist.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 public class RegisterDTO {
 
+	@NotBlank(message = "Username is required")
     private String username;
-	private String email;
+
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email must be valid")
+    private String email;
+
+    @NotBlank(message = "Password is required")
     private String password;
+
+    @NotBlank(message = "Role is required")
     private String role; // e.g., "PATIENT", "HEALTHCARE_PROVIDER", "INSURANCE_COMPANY"
     
     public String getUsername() {

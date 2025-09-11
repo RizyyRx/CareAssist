@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import com.hexaware.project.CareAssist.exception.CustomAccessDeniedHandler;
 import com.hexaware.project.CareAssist.jwt.JwtAuthenticationEntryPoint;
 import com.hexaware.project.CareAssist.jwt.JwtAuthenticationFilter;
 
@@ -26,13 +27,15 @@ public class SpringSecurityConfig {
 	private UserDetailsService userDetailsService;
     private JwtAuthenticationEntryPoint authenticationEntryPoint;
     private JwtAuthenticationFilter authenticationFilter;
+    private CustomAccessDeniedHandler accessDeniedHandler;
     
     public SpringSecurityConfig(UserDetailsService userDetailsService,
-			JwtAuthenticationEntryPoint authenticationEntryPoint, JwtAuthenticationFilter authenticationFilter) {
+			JwtAuthenticationEntryPoint authenticationEntryPoint, JwtAuthenticationFilter authenticationFilter, CustomAccessDeniedHandler accessDeniedHandler) {
 		super();
 		this.userDetailsService = userDetailsService;
 		this.authenticationEntryPoint = authenticationEntryPoint;
 		this.authenticationFilter = authenticationFilter;
+		this.accessDeniedHandler = accessDeniedHandler;
 	}
  
     @Bean
@@ -61,7 +64,8 @@ public class SpringSecurityConfig {
                 }).httpBasic(Customizer.withDefaults());
  
         http.exceptionHandling( exception -> exception
-                .authenticationEntryPoint(authenticationEntryPoint));
+                .authenticationEntryPoint(authenticationEntryPoint)
+                .accessDeniedHandler(accessDeniedHandler));
 
         http.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
  
