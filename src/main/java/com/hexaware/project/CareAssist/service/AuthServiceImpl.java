@@ -66,6 +66,7 @@ public class AuthServiceImpl implements AuthService{
 	    // Only allow specific roles from client
 	    if (!requestedRole.equals("PATIENT") &&
 	        !requestedRole.equals("HEALTHCARE_PROVIDER") &&
+	        !requestedRole.equals("ADMIN") &&
 	        !requestedRole.equals("INSURANCE_COMPANY")) {
 	        throw new RuntimeException("Invalid role");
 	    }

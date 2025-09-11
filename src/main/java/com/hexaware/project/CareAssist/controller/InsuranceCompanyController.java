@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 
-import com.hexaware.project.CareAssist.dto.ClaimHistoryDTO;
+import com.hexaware.project.CareAssist.dto.GetAllClaimHistoryDTO;
 import com.hexaware.project.CareAssist.dto.InsurancePlanDTO;
 import com.hexaware.project.CareAssist.dto.PaymentRequestDTO;
 import com.hexaware.project.CareAssist.entity.User;
@@ -37,6 +37,7 @@ public class InsuranceCompanyController {
 	private InsuranceCompanyService insuranceCompanyService;
     private UserRepository userRepository;
 
+    // Create insurance plan
     @PreAuthorize("hasRole('INSURANCE_COMPANY')")
 	@PostMapping("/create")
     public ResponseEntity<String> createInsurancePlan(@Valid @RequestBody InsurancePlanDTO insurancePlanDTO, Authentication authentication) {
@@ -49,12 +50,14 @@ public class InsuranceCompanyController {
         return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
     
+    // Get all insurance plans
     @GetMapping("/get-all")
     public ResponseEntity<List<InsurancePlanDTO>> getAllInsurancePlans() {
         List<InsurancePlanDTO> plans = insuranceCompanyService.getAllInsurancePlans();
         return ResponseEntity.ok(plans);
     }
     
+    // Approve claim
     @PreAuthorize("hasRole('INSURANCE_COMPANY')")
     @PatchMapping("/claim/approve/{claimId}")
     public ResponseEntity<String> approveClaim(@PathVariable int claimId) {
@@ -62,6 +65,7 @@ public class InsuranceCompanyController {
         return ResponseEntity.ok(message);
     }
     
+    // Process payment
     @PreAuthorize("hasRole('INSURANCE_COMPANY')")
     @PostMapping("/claim/process-payment")
     public ResponseEntity<String> processPayment(@Valid @RequestBody PaymentRequestDTO paymentRequest,
@@ -79,10 +83,11 @@ public class InsuranceCompanyController {
         return ResponseEntity.ok(result);
     }
     
+    // Get claim by patient Id
     @PreAuthorize("hasAnyRole('INSURANCE_COMPANY','PATIENT')")
     @GetMapping("/get-claims/patient/{patientId}")
-    public ResponseEntity<List<ClaimHistoryDTO>> getClaimsByPatient(@PathVariable int patientId) {
-        List<ClaimHistoryDTO> claimHistory = insuranceCompanyService.getClaimsByPatientId(patientId);
+    public ResponseEntity<List<GetAllClaimHistoryDTO>> getClaimsByPatient(@PathVariable int patientId) {
+        List<GetAllClaimHistoryDTO> claimHistory = insuranceCompanyService.getClaimsByPatientId(patientId);
         return ResponseEntity.ok(claimHistory);
     }
 

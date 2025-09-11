@@ -24,6 +24,7 @@ public class AuthController {
 		this.authService = authService;
 	}
 
+    // Login user
     @PostMapping("/login")
     public ResponseEntity<JwtAuthResponse> login(@RequestBody LoginDTO loginDto){
         String token = authService.login(loginDto);
@@ -34,6 +35,7 @@ public class AuthController {
         return new ResponseEntity<>(jwtAuthResponse, HttpStatus.OK);
     }
     
+    // Register user with role
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestBody RegisterDTO registerDTO){
     	String message = authService.register(registerDTO);

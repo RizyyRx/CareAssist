@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class ClaimHistoryDTO {
+public class GetAllClaimHistoryDTO {
 	
 	private int claimId;
     private BigDecimal claimAmount;
@@ -77,10 +77,10 @@ public class ClaimHistoryDTO {
 	public void setApprovedAt(LocalDateTime approvedAt) {
 		this.approvedAt = approvedAt;
 	}
-	public ClaimHistoryDTO() {
+	public GetAllClaimHistoryDTO() {
 		super();
 	}
-	public ClaimHistoryDTO(int claimId, BigDecimal claimAmount, BigDecimal invoiceAmount, LocalDate dateOfService,
+	public GetAllClaimHistoryDTO(int claimId, BigDecimal claimAmount, BigDecimal invoiceAmount, LocalDate dateOfService,
 			String diagnosis, String treatment, String status, LocalDateTime submittedAt, LocalDateTime reviewedAt,
 			LocalDateTime approvedAt) {
 		super();

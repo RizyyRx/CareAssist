@@ -37,6 +37,8 @@ public class PatientController {
 	private UserRepository userRepository;
 	private PatientService patientService;
 
+	
+	// Update patient profile
 	@PreAuthorize("hasRole('PATIENT')")
 	@PutMapping("/update-profile")
 	public ResponseEntity<String> updateProfile(@RequestBody PatientUpdateDTO dto,Authentication authentication) {
@@ -49,6 +51,7 @@ public class PatientController {
 	    return ResponseEntity.ok(response);
 	}
 	
+	// Select an Insurance plan
 	@PreAuthorize("hasRole('PATIENT')")
 	@PostMapping("/select-plan")
 	public ResponseEntity<String> selectInsurancePlan(@Valid @RequestBody PatientInsuranceDTO dto, Authentication authentication) {
@@ -61,6 +64,7 @@ public class PatientController {
 	    return new ResponseEntity<>(message, HttpStatus.CREATED);
 	}
 	
+	// Get current patient invoices
 	@GetMapping("/invoices")
     public ResponseEntity<List<InvoiceViewDTO>> getPatientInvoices(Authentication authentication) {
         String username = authentication.getName();
@@ -71,6 +75,7 @@ public class PatientController {
         return ResponseEntity.ok(invoices);
     }
 	
+	// Submit a claim
 	 @PreAuthorize("hasRole('PATIENT')")
 	    @PostMapping("/submit-claim")
 	    public ResponseEntity<String> submitClaim(@Valid @RequestBody ClaimSubmissionDTO dto,

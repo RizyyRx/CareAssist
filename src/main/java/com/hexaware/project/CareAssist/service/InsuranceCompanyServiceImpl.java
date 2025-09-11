@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.hexaware.project.CareAssist.dto.ClaimHistoryDTO;
+import com.hexaware.project.CareAssist.dto.GetAllClaimHistoryDTO;
 import com.hexaware.project.CareAssist.dto.InsurancePlanDTO;
 import com.hexaware.project.CareAssist.entity.Claim;
 import com.hexaware.project.CareAssist.entity.InsurancePlan;
@@ -96,10 +96,10 @@ public class InsuranceCompanyServiceImpl implements InsuranceCompanyService{
 		    return "Payment processing done";
 		}
 		
-		public List<ClaimHistoryDTO> getClaimsByPatientId(int patientId) {
+		public List<GetAllClaimHistoryDTO> getClaimsByPatientId(int patientId) {
 		    List<Claim> claims = claimRepository.findByPatientPatientId(patientId);
 		    return claims.stream()
-		        .map(c -> new ClaimHistoryDTO(
+		        .map(c -> new GetAllClaimHistoryDTO(
 		            c.getClaimId(),
 		            c.getClaimAmount(),
 		            c.getInvoiceAmount(),

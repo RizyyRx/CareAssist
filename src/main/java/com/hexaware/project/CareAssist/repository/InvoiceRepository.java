@@ -10,4 +10,6 @@ import com.hexaware.project.CareAssist.entity.Patient;
 public interface InvoiceRepository extends JpaRepository<Invoice, Integer>{
 
 	List<Invoice> findByPatient(Patient patient);
+	
+	List<Invoice> findByPatientPatientId(int patientId);
 }
