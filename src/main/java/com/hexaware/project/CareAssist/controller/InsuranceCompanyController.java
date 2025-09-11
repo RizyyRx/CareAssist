@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 
+import com.hexaware.project.CareAssist.dto.ClaimHistoryDTO;
 import com.hexaware.project.CareAssist.dto.InsurancePlanDTO;
 import com.hexaware.project.CareAssist.dto.PaymentRequestDTO;
 import com.hexaware.project.CareAssist.entity.User;
@@ -76,6 +77,13 @@ public class InsuranceCompanyController {
             paymentRequest.getTransactionRef());
 
         return ResponseEntity.ok(result);
+    }
+    
+    @PreAuthorize("hasAnyRole('INSURANCE_COMPANY','PATIENT')")
+    @GetMapping("/get-claims/patient/{patientId}")
+    public ResponseEntity<List<ClaimHistoryDTO>> getClaimsByPatient(@PathVariable int patientId) {
+        List<ClaimHistoryDTO> claimHistory = insuranceCompanyService.getClaimsByPatientId(patientId);
+        return ResponseEntity.ok(claimHistory);
     }
 
 }

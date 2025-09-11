@@ -3,9 +3,11 @@ package com.hexaware.project.CareAssist.service;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.hexaware.project.CareAssist.dto.ClaimHistoryDTO;
 import com.hexaware.project.CareAssist.dto.InsurancePlanDTO;
 import com.hexaware.project.CareAssist.entity.Claim;
 import com.hexaware.project.CareAssist.entity.InsurancePlan;
@@ -92,6 +94,24 @@ public class InsuranceCompanyServiceImpl implements InsuranceCompanyService{
 		    paymentRepository.save(payment);
 
 		    return "Payment processing done";
+		}
+		
+		public List<ClaimHistoryDTO> getClaimsByPatientId(int patientId) {
+		    List<Claim> claims = claimRepository.findByPatientPatientId(patientId);
+		    return claims.stream()
+		        .map(c -> new ClaimHistoryDTO(
+		            c.getClaimId(),
+		            c.getClaimAmount(),
+		            c.getInvoiceAmount(),
+		            c.getDateOfService(),
+		            c.getDiagnosis(),
+		            c.getTreatment(),
+		            c.getStatus(),
+		            c.getSubmittedAt(),
+		            c.getReviewedAt(),
+		            c.getApprovedAt()
+		        ))
+		        .collect(Collectors.toList());
 		}
 
 }
