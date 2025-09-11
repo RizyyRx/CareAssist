@@ -3,17 +3,22 @@ package com.hexaware.project.CareAssist.service;
 
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.hexaware.project.CareAssist.dto.InvoiceViewDTO;
 import com.hexaware.project.CareAssist.dto.PatientInsuranceDTO;
 import com.hexaware.project.CareAssist.dto.PatientUpdateDTO;
 import com.hexaware.project.CareAssist.entity.InsurancePlan;
+import com.hexaware.project.CareAssist.entity.Invoice;
 import com.hexaware.project.CareAssist.entity.Patient;
 import com.hexaware.project.CareAssist.entity.PatientInsurance;
 import com.hexaware.project.CareAssist.entity.User;
 import com.hexaware.project.CareAssist.repository.InsurancePlanRepository;
+import com.hexaware.project.CareAssist.repository.InvoiceRepository;
 import com.hexaware.project.CareAssist.repository.PatientInsuranceRepository;
 import com.hexaware.project.CareAssist.repository.PatientRepository;
 
@@ -22,16 +27,18 @@ public class PatientServiceImpl implements PatientService{
 	
 
 	public PatientServiceImpl(PatientRepository patientRepository, InsurancePlanRepository insurancePlanRepository,
-			PatientInsuranceRepository patientInsuranceRepository) {
+			PatientInsuranceRepository patientInsuranceRepository, InvoiceRepository invoiceRepository) {
 		super();
 		this.patientRepository = patientRepository;
 		this.insurancePlanRepository = insurancePlanRepository;
 		this.patientInsuranceRepository = patientInsuranceRepository;
+		this.invoiceRepository = invoiceRepository;
 	}
 
 	private PatientRepository patientRepository;
 	private InsurancePlanRepository insurancePlanRepository;
 	private PatientInsuranceRepository patientInsuranceRepository;
+	private InvoiceRepository invoiceRepository;
 
 
 	public String updatePatientProfile(User user, PatientUpdateDTO dto) {
@@ -78,6 +85,35 @@ public class PatientServiceImpl implements PatientService{
 		
 		return "Insurance plan selected successfully";
 		
+	}
+	
+	public List<InvoiceViewDTO> getInvoices(User user) {
+	    Patient patient = user.getPatient();
+	    if (patient == null) {
+	        throw new RuntimeException("No patient found for user");
+	    }
+	    List<Invoice> invoices = invoiceRepository.findByPatient(patient);
+
+	    return invoices.stream()
+	        .map(inv -> {
+	            InvoiceViewDTO dto = new InvoiceViewDTO();
+	            dto.setInvoiceId(inv.getInvoiceId());
+	            dto.setConsultationFee(inv.getConsultationFee());
+	            dto.setDiagnosticScanFee(inv.getDiagnosticScanFee());
+	            dto.setDiagnosticTestsFee(inv.getDiagnosticTestsFee());
+	            dto.setMedicationFee(inv.getMedicationFee());
+	            dto.setDueDate(inv.getDueDate());
+	            dto.setInvoiceDate(inv.getInvoiceDate());
+	            dto.setInvoiceNumber(inv.getInvoiceNumber());
+	            dto.setStatus(inv.getStatus());
+	            dto.setSubtotal(inv.getSubtotal());
+	            dto.setTax(inv.getTax());
+	            dto.setTotalAmount(inv.getTotalAmount());
+	            dto.setPatientId(inv.getPatient().getPatientId());
+	            dto.setProviderId(inv.getProvider().getUserId());
+	            return dto;
+	        })
+	        .collect(Collectors.toList());
 	}
 	
 
