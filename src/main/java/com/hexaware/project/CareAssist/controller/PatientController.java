@@ -1,5 +1,6 @@
 package com.hexaware.project.CareAssist.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -7,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -78,13 +81,26 @@ public class PatientController {
 	// Submit a claim
 	 @PreAuthorize("hasRole('PATIENT')")
 	    @PostMapping("/submit-claim")
-	    public ResponseEntity<String> submitClaim(@Valid @RequestBody ClaimSubmissionDTO dto,
-	                                              Authentication authentication) {
+	    public ResponseEntity<String> submitClaim(@Valid @RequestBody ClaimSubmissionDTO dto,Authentication authentication) {
 	        String username = authentication.getName();
 	        User user = userRepository.findByUsername(username)
 	                .orElseThrow(() -> new RuntimeException("User not found"));
 	        String message = patientService.submitClaim(user, dto);
 	        return new ResponseEntity<>(message, HttpStatus.CREATED);
 	    }
+	 
+	 // Mark status as PAID in invoice
+	 @PreAuthorize("hasRole('PATIENT')")
+	 @PatchMapping("/invoice/mark-paid/{invoiceId}")
+	 public ResponseEntity<String> markInvoicePaid(@PathVariable int invoiceId,Authentication authentication) {
+
+		 String username = authentication.getName();
+	        User user = userRepository.findByUsername(username)
+	                .orElseThrow(() -> new RuntimeException("User not found"));
+
+	     String message = patientService.markInvoiceAsPaid(invoiceId, user);
+
+	     return ResponseEntity.ok(message);
+	 }
 	
 }

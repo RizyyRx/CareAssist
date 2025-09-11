@@ -17,5 +17,7 @@ public interface PatientService {
 	List<InvoiceViewDTO> getInvoices(User user);
 	
 	String submitClaim(User user, ClaimSubmissionDTO dto);
+	
+	String markInvoiceAsPaid(int invoiceId, User user);
 
 }

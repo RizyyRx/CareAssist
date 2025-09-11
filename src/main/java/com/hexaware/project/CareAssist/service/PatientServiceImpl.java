@@ -159,5 +159,23 @@ public class PatientServiceImpl implements PatientService{
         return "Claim submitted successfully";
     }
 	
+	public String markInvoiceAsPaid(int invoiceId, User user) {
+	    Patient patient = user.getPatient();
+	    if (patient == null) {
+	        throw new RuntimeException("No patient found for user");
+	    }
+
+	    Invoice invoice = invoiceRepository.findById(invoiceId)
+	        .orElseThrow(() -> new RuntimeException("Invoice not found"));
+
+	    if (invoice.getPatient().getPatientId() != patient.getPatientId()) {
+	        throw new RuntimeException("Invoice does not belong to the patient");
+	    }
+
+	    invoice.setStatus("PAID");
+	    invoiceRepository.save(invoice);
+
+	    return "Invoice marked as PAID";
+	}
 
 }

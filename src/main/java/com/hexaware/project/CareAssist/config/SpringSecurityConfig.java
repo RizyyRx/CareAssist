@@ -49,12 +49,13 @@ public class SpringSecurityConfig {
                 .authorizeHttpRequests((authorize) -> {
                     authorize.requestMatchers("/api/auth/**").permitAll();
                     authorize.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll();
-                    authorize.requestMatchers("/api/insurance-company/create").hasRole("INSURANCE_COMPANY");
                     authorize.requestMatchers("/api/patient/update-profile").hasRole("PATIENT");
                     authorize.requestMatchers("/api/patient/select-plan").hasRole("PATIENT");
-                    authorize.requestMatchers("/api/provider/create-invoice").hasRole("HEALTHCARE_PROVIDER");
+                    authorize.requestMatchers("/api/patient/invoice/mark-paid/**").hasRole("PATIENT");
                     authorize.requestMatchers("/api/patient/invoices").hasRole("PATIENT");
                     authorize.requestMatchers("/api/patient/submit-claim").hasRole("PATIENT");
+                    authorize.requestMatchers("/api/provider/create-invoice").hasRole("HEALTHCARE_PROVIDER");
+                    authorize.requestMatchers("/api/insurance-company/create").hasRole("INSURANCE_COMPANY");
                     authorize.requestMatchers("/api/insurance-company/claim/approve/**").hasRole("INSURANCE_COMPANY");
                     authorize.requestMatchers("/api/insurance-company/claim/process-payment").hasRole("INSURANCE_COMPANY");
                     authorize.requestMatchers("/api/insurance-company/get-claims/patient/**").hasAnyRole("INSURANCE_COMPANY","PATIENT");
