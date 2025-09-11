@@ -9,14 +9,17 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.hexaware.project.CareAssist.dto.ClaimSubmissionDTO;
 import com.hexaware.project.CareAssist.dto.InvoiceViewDTO;
 import com.hexaware.project.CareAssist.dto.PatientInsuranceDTO;
 import com.hexaware.project.CareAssist.dto.PatientUpdateDTO;
+import com.hexaware.project.CareAssist.entity.Claim;
 import com.hexaware.project.CareAssist.entity.InsurancePlan;
 import com.hexaware.project.CareAssist.entity.Invoice;
 import com.hexaware.project.CareAssist.entity.Patient;
 import com.hexaware.project.CareAssist.entity.PatientInsurance;
 import com.hexaware.project.CareAssist.entity.User;
+import com.hexaware.project.CareAssist.repository.ClaimRepository;
 import com.hexaware.project.CareAssist.repository.InsurancePlanRepository;
 import com.hexaware.project.CareAssist.repository.InvoiceRepository;
 import com.hexaware.project.CareAssist.repository.PatientInsuranceRepository;
@@ -27,18 +30,20 @@ public class PatientServiceImpl implements PatientService{
 	
 
 	public PatientServiceImpl(PatientRepository patientRepository, InsurancePlanRepository insurancePlanRepository,
-			PatientInsuranceRepository patientInsuranceRepository, InvoiceRepository invoiceRepository) {
+			PatientInsuranceRepository patientInsuranceRepository, InvoiceRepository invoiceRepository, ClaimRepository claimRepository) {
 		super();
 		this.patientRepository = patientRepository;
 		this.insurancePlanRepository = insurancePlanRepository;
 		this.patientInsuranceRepository = patientInsuranceRepository;
 		this.invoiceRepository = invoiceRepository;
+		this.claimRepository = claimRepository;
 	}
 
 	private PatientRepository patientRepository;
 	private InsurancePlanRepository insurancePlanRepository;
 	private PatientInsuranceRepository patientInsuranceRepository;
 	private InvoiceRepository invoiceRepository;
+	private ClaimRepository claimRepository;
 
 
 	public String updatePatientProfile(User user, PatientUpdateDTO dto) {
@@ -115,6 +120,44 @@ public class PatientServiceImpl implements PatientService{
 	        })
 	        .collect(Collectors.toList());
 	}
+	
+	public String submitClaim(User user, ClaimSubmissionDTO dto) {
+        Patient patient = user.getPatient();
+        if (patient == null) {
+            throw new RuntimeException("No patient found for user");
+        }
+
+        Invoice invoice = invoiceRepository.findById(dto.getInvoiceId())
+                .orElseThrow(() -> new RuntimeException("Invoice not found"));
+
+        InsurancePlan insurancePlan = insurancePlanRepository.findById(dto.getInsurancePlanId())
+                .orElseThrow(() -> new RuntimeException("Insurance plan not found"));
+
+        Claim claim = new Claim();
+        claim.setPatient(patient);
+        claim.setInvoice(invoice);
+        claim.setInsurancePlan(insurancePlan);
+
+        claim.setPatientName(patient.getFirstName() + " " + patient.getLastName());
+        claim.setPatientDob(patient.getDob());
+        claim.setPatientAddress(patient.getAddress());
+
+        claim.setDiagnosis(dto.getDiagnosis());
+        claim.setTreatment(dto.getTreatment());
+        claim.setDateOfService(dto.getDateOfService());
+
+        // Fetch invoice amount directly from invoice entity
+        claim.setInvoiceAmount(invoice.getTotalAmount());
+        claim.setClaimAmount(dto.getClaimAmount());
+
+        claim.setMedicalDocuments(dto.getMedicalDocuments());
+
+        claim.setStatus("SUBMITTED");
+
+        claimRepository.save(claim);
+
+        return "Claim submitted successfully";
+    }
 	
 
 }

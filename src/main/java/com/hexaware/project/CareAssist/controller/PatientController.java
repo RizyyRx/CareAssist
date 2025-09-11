@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hexaware.project.CareAssist.dto.ClaimSubmissionDTO;
 import com.hexaware.project.CareAssist.dto.InvoiceViewDTO;
 import com.hexaware.project.CareAssist.dto.PatientInsuranceDTO;
 import com.hexaware.project.CareAssist.dto.PatientUpdateDTO;
@@ -69,5 +70,16 @@ public class PatientController {
         List<InvoiceViewDTO> invoices = patientService.getInvoices(user);
         return ResponseEntity.ok(invoices);
     }
+	
+	 @PreAuthorize("hasRole('PATIENT')")
+	    @PostMapping("/submitclaim")
+	    public ResponseEntity<String> submitClaim(@Valid @RequestBody ClaimSubmissionDTO dto,
+	                                              Authentication authentication) {
+	        String username = authentication.getName();
+	        User user = userRepository.findByUsername(username)
+	                .orElseThrow(() -> new RuntimeException("User not found"));
+	        String message = patientService.submitClaim(user, dto);
+	        return new ResponseEntity<>(message, HttpStatus.CREATED);
+	    }
 	
 }
