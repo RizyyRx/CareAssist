@@ -15,6 +15,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 
 import com.hexaware.project.CareAssist.dto.InsurancePlanDTO;
+import com.hexaware.project.CareAssist.dto.PaymentRequestDTO;
 import com.hexaware.project.CareAssist.entity.User;
 import com.hexaware.project.CareAssist.repository.UserRepository;
 import com.hexaware.project.CareAssist.service.InsuranceCompanyService;
@@ -58,6 +59,23 @@ public class InsuranceCompanyController {
     public ResponseEntity<String> approveClaim(@PathVariable int claimId) {
         String message = insuranceCompanyService.reviewAndApproveClaim(claimId);
         return ResponseEntity.ok(message);
+    }
+    
+    @PreAuthorize("hasRole('INSURANCE_COMPANY')")
+    @PostMapping("/claim/process-payment")
+    public ResponseEntity<String> processPayment(@Valid @RequestBody PaymentRequestDTO paymentRequest,
+                                                 Authentication authentication) {
+        String username = authentication.getName();
+        User insuranceCompany = userRepository.findByUsername(username)
+            .orElseThrow(() -> new RuntimeException("User not found"));
+
+        String result = insuranceCompanyService.processClaimPayment(
+            insuranceCompany,
+            paymentRequest.getClaimId(),
+            paymentRequest.getAmountPaid(),
+            paymentRequest.getTransactionRef());
+
+        return ResponseEntity.ok(result);
     }
 
 }

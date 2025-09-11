@@ -1,5 +1,6 @@
 package com.hexaware.project.CareAssist.service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import com.hexaware.project.CareAssist.dto.InsurancePlanDTO;
@@ -13,5 +14,7 @@ public interface InsuranceCompanyService {
 	List<InsurancePlanDTO> getAllInsurancePlans();
 	
 	String reviewAndApproveClaim(int claimId);
+	
+	String processClaimPayment(User insuranceCompany, int claimId, BigDecimal amountPaid, String transactionRef);
 	
 }
