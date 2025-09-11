@@ -27,7 +27,6 @@ public class PatientInsurance {
     @NotNull(message = "Insurance plan is required")
     private InsurancePlan insurancePlan;
 
-    @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private LocalDate startDate;
 
@@ -38,18 +37,18 @@ public class PatientInsurance {
 
     @NotBlank(message = "Status is required")
     @Column(nullable = false, length = 20)
-    private String status; // e.g., ACTIVE, EXPIRED, CANCELLED
+    private String status = "ACTIVE"; // e.g., ACTIVE, EXPIRED, CANCELLED
     
     // Auto-calculate endDate before insert
     @PrePersist
     public void calculateEndDate() {
         if (startDate != null && insurancePlan != null && insurancePlan.getPolicyTerm() > 0) {
-            // Assuming policyTerm is in years
-            this.endDate = startDate.plusYears(insurancePlan.getPolicyTerm());
+            // Assuming policyTerm is in months
+            this.endDate = startDate.plusMonths(insurancePlan.getPolicyTerm());
         }
     }
-
-    public int getPatientInsuranceId() {
+	
+	public int getPatientInsuranceId() {
 		return patientInsuranceId;
 	}
 
@@ -120,5 +119,6 @@ public class PatientInsurance {
 				+ ", insurancePlan=" + insurancePlan + ", startDate=" + startDate + ", endDate=" + endDate + ", status="
 				+ status + "]";
 	}
+
 
 }
