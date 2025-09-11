@@ -6,10 +6,12 @@ import com.hexaware.project.CareAssist.dto.InsurancePlanDTO;
 import com.hexaware.project.CareAssist.entity.InsurancePlan;
 import com.hexaware.project.CareAssist.entity.User;
 
-public interface InsurancePlanService {
+public interface InsuranceCompanyService {
 
 	String createInsurancePlan(User insuranceCompany,InsurancePlanDTO dto);
 	
 	List<InsurancePlanDTO> getAllInsurancePlans();
+	
+	String reviewAndApproveClaim(int claimId);
 	
 }

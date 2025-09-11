@@ -38,7 +38,7 @@ public class PatientController {
 	private PatientService patientService;
 
 	@PreAuthorize("hasRole('PATIENT')")
-	@PutMapping("/updateprofile")
+	@PutMapping("/update-profile")
 	public ResponseEntity<String> updateProfile(@RequestBody PatientUpdateDTO dto,Authentication authentication) {
 
 	    String username = authentication.getName(); // Extract from JWT
@@ -50,7 +50,7 @@ public class PatientController {
 	}
 	
 	@PreAuthorize("hasRole('PATIENT')")
-	@PostMapping("/selectplan")
+	@PostMapping("/select-plan")
 	public ResponseEntity<String> selectInsurancePlan(@Valid @RequestBody PatientInsuranceDTO dto, Authentication authentication) {
 		
 	    String username = authentication.getName(); // Extract from JWT
@@ -72,7 +72,7 @@ public class PatientController {
     }
 	
 	 @PreAuthorize("hasRole('PATIENT')")
-	    @PostMapping("/submitclaim")
+	    @PostMapping("/submit-claim")
 	    public ResponseEntity<String> submitClaim(@Valid @RequestBody ClaimSubmissionDTO dto,
 	                                              Authentication authentication) {
 	        String username = authentication.getName();

@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,22 +17,22 @@ import org.springframework.security.core.Authentication;
 import com.hexaware.project.CareAssist.dto.InsurancePlanDTO;
 import com.hexaware.project.CareAssist.entity.User;
 import com.hexaware.project.CareAssist.repository.UserRepository;
-import com.hexaware.project.CareAssist.service.InsurancePlanService;
+import com.hexaware.project.CareAssist.service.InsuranceCompanyService;
 
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/insuranceplan")
-public class InsurancePlanController {
+@RequestMapping("/api/insurance-company")
+public class InsuranceCompanyController {
 
-    public InsurancePlanController(InsurancePlanService insurancePlanService, UserRepository userRepository) {
+    public InsuranceCompanyController(InsuranceCompanyService insuranceCompanyService, UserRepository userRepository) {
 		super();
-		this.insurancePlanService = insurancePlanService;
+		this.insuranceCompanyService = insuranceCompanyService;
 		this.userRepository = userRepository;
 	}
 
 
-	private InsurancePlanService insurancePlanService;
+	private InsuranceCompanyService insuranceCompanyService;
     private UserRepository userRepository;
 
     @PreAuthorize("hasRole('INSURANCE_COMPANY')")
@@ -41,14 +43,21 @@ public class InsurancePlanController {
 	    User user = userRepository.findByUsername(username)
 	                 .orElseThrow(() -> new RuntimeException("User not found"));
 	    
-        String message =  insurancePlanService.createInsurancePlan(user, insurancePlanDTO);
+        String message =  insuranceCompanyService.createInsurancePlan(user, insurancePlanDTO);
         return new ResponseEntity<>(message, HttpStatus.CREATED);
     }
     
-    @GetMapping("/getall")
+    @GetMapping("/get-all")
     public ResponseEntity<List<InsurancePlanDTO>> getAllInsurancePlans() {
-        List<InsurancePlanDTO> plans = insurancePlanService.getAllInsurancePlans();
+        List<InsurancePlanDTO> plans = insuranceCompanyService.getAllInsurancePlans();
         return ResponseEntity.ok(plans);
+    }
+    
+    @PreAuthorize("hasRole('INSURANCE_COMPANY')")
+    @PatchMapping("/claim/approve/{claimId}")
+    public ResponseEntity<String> approveClaim(@PathVariable int claimId) {
+        String message = insuranceCompanyService.reviewAndApproveClaim(claimId);
+        return ResponseEntity.ok(message);
     }
 
 }

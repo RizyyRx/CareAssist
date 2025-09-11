@@ -29,7 +29,7 @@ public class HealthcareProviderController {
 	private UserRepository userRepository;
 	
     @PreAuthorize("hasRole('HEALTHCARE_PROVIDER')")
-    @PostMapping("/createinvoice")
+    @PostMapping("/create-invoice")
     public ResponseEntity<String> createInvoice(@Valid @RequestBody InvoiceDTO dto, Authentication authentication) {
         String providerUsername = authentication.getName();
 
